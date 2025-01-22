@@ -115,4 +115,32 @@ router.put('/actualizarUsuario/:cedula', (req, res) => {
     });
 });
 
+// Eliminar usuario
+router.delete('/eliminarUsuario/:cedula', (req, res) => {
+    console.log('');
+    console.log('- - Petición recibida para eliminar usuario:', req.params.cedula);
+
+    getConnection((err, connection) => {
+        if (err) {
+            console.error('Error en la conexión a la base de datos:', err);
+        }
+
+        console.log('Conexión a la base de datos establecida');
+
+        const cedula = req.params.cedula;
+        const queryString = "DELETE FROM usuario WHERE cedulausuario = ?";
+
+        connection.query(queryString, [cedula], (err, rows) => {
+            connection.release();
+
+            if (err) {
+                console.error('Error en la consulta:', err);
+            }
+
+            console.log('Consulta realizada con éxito');
+            res.json({ status: 'Usuario eliminado correctamente' });
+        });
+    });
+});
+
 module.exports = router;
