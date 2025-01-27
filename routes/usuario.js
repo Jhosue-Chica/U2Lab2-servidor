@@ -143,4 +143,33 @@ router.delete('/eliminarUsuario/:cedula', (req, res) => {
     });
 });
 
+// Actualiza un usuario por su cedula y si no existe lo crea
+
+router.put('/actualizarOCrearUsuario/:cedula', (req, res) => {
+    console.log('');
+    console.log('- - Petición recibida para actualizar o crear usuario:', req.body);
+    const data = {
+        nombreusuario: req.body.nombreusuario,
+        cedulausuario: req.body.cedulausuario,
+        telefonousuario: req.body.telefonousuario,
+        direccionusuario: req.body.direccionusuario,
+        correousuario: req.body.correousuario,
+    }
+    const query = "INSERT INTO usuario (nombreusuario, cedulausuario, telefonousuario, direccionusuario, correousuario) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE nombreusuario = ?, cedulausuario = ?, telefonousuario = ?, direccionusuario = ?, correousuario = ?";
+    const params = [data.nombreusuario, data.cedulausuario, data.telefonousuario, data.direccionusuario, data.correousuario, data.nombreusuario, data.cedulausuario, data.telefonousuario, data.direccionusuario, data.correousuario];
+
+    getConnection(function (err, user) {
+        if (err) {
+            console.error('No se pudo realizar la conexión a la base de datos:', err);
+        }
+        user.query(query, params, function (err, result) {
+            if (!err) {
+                res.json({ status: 'Usuario actualizado o creado correctamente' });
+            } else {
+                console.error('Error en la consulta:', err);
+            }
+        });
+    });
+});
+
 module.exports = router;

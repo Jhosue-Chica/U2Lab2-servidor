@@ -11,6 +11,7 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 app.use(require('./routes/usuario'));
+app.use(require('./routes/usuario-mongo'));
 
 // Cabeceras CORS
 app.use(function(req, res, next) {
